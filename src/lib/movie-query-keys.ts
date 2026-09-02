@@ -1,13 +1,6 @@
-export type MovieCategory =
-  | "now_playing"
-  | "popular"
-  | "top_rated"
-  | "upcoming";
+import type { MovieListKeyInput } from "@/types/movie";
 
-export type MovieListKeyInput = {
-  category: MovieCategory;
-  query?: string;
-};
+export type { MovieCategory, MovieListKeyInput } from "@/types/movie";
 
 const movieRootKey = ["movies"] as const;
 

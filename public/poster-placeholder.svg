@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-labelledby="title description">
+  <title id="title">Movie poster unavailable</title>
+  <desc id="description">A neutral placeholder for a missing movie poster.</desc>
+  <rect width="600" height="900" fill="#18181b" />
+  <rect x="150" y="280" width="300" height="220" rx="24" fill="#27272a" stroke="#52525b" stroke-width="8" />
+  <path d="M150 345h300M230 280l-50 65M330 280l-50 65M430 280l-50 65" fill="none" stroke="#a1a1aa" stroke-width="18" />
+  <circle cx="245" cy="422" r="34" fill="none" stroke="#a1a1aa" stroke-width="14" />
+  <path d="m232 403 35 19-35 20z" fill="#a1a1aa" />
+  <path d="M205 565h190M245 610h110" fill="none" stroke="#71717a" stroke-linecap="round" stroke-width="18" />
+</svg>

@@ -35,14 +35,14 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 - [x] Add `.env.example` containing an empty `TMDB_API_TOKEN` placeholder and setup guidance.
 - [ ] Keep the real token in `.env.local`; never prefix it with `NEXT_PUBLIC_` or commit it.
 - [x] Create a server-only Axios client with the TMDB v3 base URL, bearer authorization, JSON headers, and a finite timeout.
-- [ ] Define normalized TypeScript models for `MovieSummary`, `MovieDetails`, `CastMember`, `MoviePage`, and API errors.
-- [ ] Implement server-side normalization so UI components do not depend on raw TMDB response objects.
-- [ ] Add `GET /api/movies` for category lists and title search.
-- [ ] Add `GET /api/movies/{id}` for details and credits.
-- [ ] Validate category, page, query, and movie ID inputs before forwarding requests.
-- [ ] Convert upstream failures into safe, consistent API responses without exposing the token or Axios internals.
-- [ ] Configure `next/image` to allow only the required `https://image.tmdb.org/t/p/**` remote path.
-- [ ] Provide a local poster fallback for missing `poster_path` values.
+- [x] Define normalized TypeScript models for `MovieSummary`, `MovieDetails`, `CastMember`, `MoviePage`, and API errors.
+- [x] Implement server-side normalization so UI components do not depend on raw TMDB response objects.
+- [x] Add `GET /api/movies` for category lists and title search.
+- [x] Add `GET /api/movies/{id}` for details and credits.
+- [x] Validate category, page, query, and movie ID inputs before forwarding requests.
+- [x] Convert upstream failures into safe, consistent API responses without exposing the token or Axios internals.
+- [x] Configure `next/image` to allow only the required `https://image.tmdb.org/t/p/**` remote path.
+- [x] Provide a local poster fallback for missing `poster_path` values.
 
 **Definition of done**
 
