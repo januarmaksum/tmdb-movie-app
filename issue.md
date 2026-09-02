@@ -29,12 +29,12 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 **Dependencies:** None
 
 - [x] Install `axios` and `@tanstack/react-query`.
-- [ ] Add a client-side `QueryClientProvider` at the narrowest appropriate App Router boundary.
-- [ ] Configure a non-zero default `staleTime` to prevent an immediate duplicate refetch after hydration.
-- [ ] Add a typed, centralized query-key factory for movie lists and movie details.
-- [ ] Add `.env.example` containing an empty `TMDB_API_TOKEN` placeholder and setup guidance.
+- [x] Add a client-side `QueryClientProvider` at the narrowest appropriate App Router boundary.
+- [x] Configure a non-zero default `staleTime` to prevent an immediate duplicate refetch after hydration.
+- [x] Add a typed, centralized query-key factory for movie lists and movie details.
+- [x] Add `.env.example` containing an empty `TMDB_API_TOKEN` placeholder and setup guidance.
 - [ ] Keep the real token in `.env.local`; never prefix it with `NEXT_PUBLIC_` or commit it.
-- [ ] Create a server-only Axios client with the TMDB v3 base URL, bearer authorization, JSON headers, and a finite timeout.
+- [x] Create a server-only Axios client with the TMDB v3 base URL, bearer authorization, JSON headers, and a finite timeout.
 - [ ] Define normalized TypeScript models for `MovieSummary`, `MovieDetails`, `CastMember`, `MoviePage`, and API errors.
 - [ ] Implement server-side normalization so UI components do not depend on raw TMDB response objects.
 - [ ] Add `GET /api/movies` for category lists and title search.
