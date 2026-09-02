@@ -28,7 +28,7 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 
 **Dependencies:** None
 
-- [ ] Install `axios` and `@tanstack/react-query`.
+- [x] Install `axios` and `@tanstack/react-query`.
 - [ ] Add a client-side `QueryClientProvider` at the narrowest appropriate App Router boundary.
 - [ ] Configure a non-zero default `staleTime` to prevent an immediate duplicate refetch after hydration.
 - [ ] Add a typed, centralized query-key factory for movie lists and movie details.
