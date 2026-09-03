@@ -22,13 +22,13 @@ export async function generateMetadata({
     const movie = await getMovieDetailsForPage(movieId);
 
     return {
-      title: `${movie.title} | Movie Explorer`,
+      title: movie.title,
       description:
         movie.overview ?? `Explore details, cast, and credits for ${movie.title}.`,
     };
   } catch {
     return {
-      title: "Movie details | Movie Explorer",
+      title: "Movie details",
       description: "Explore movie details, cast, and credits.",
     };
   }
