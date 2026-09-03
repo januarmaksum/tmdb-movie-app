@@ -12,7 +12,7 @@ import {
   useMemo,
   useRef,
   useState,
-  type FormEvent,
+  type SubmitEvent,
 } from "react";
 import {
   normalizeMovieQuery,
@@ -221,17 +221,17 @@ function SearchControls({
     return clearDebounceTimer;
   }, [clearDebounceTimer, initialQuery, onSearchCommit, searchValue]);
 
-  function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSearchSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     clearDebounceTimer();
     onSearchCommit(searchValue);
-  }
+  };
 
-  function handleCategoryChange(category: MovieCategory) {
+  const handleCategoryChange = (category: MovieCategory) => {
     clearDebounceTimer();
     setSearchValue("");
     onCategoryChange(category);
-  }
+  };
 
   return (
     <div className="sticky top-0 z-20 mb-6 rounded-bl-lg rounded-br-lg border border-border bg-surface/95 p-2 backdrop-blur-md sm:mb-10 sm:bg-surface/70 sm:p-6">
@@ -298,7 +298,7 @@ function CatalogContent({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const loadMoreInProgressRef = useRef(false);
 
-  async function retryCatalog(kind: "error" | "empty") {
+  const retryCatalog = async (kind: "error" | "empty") => {
     setRetryKind(kind);
 
     try {
@@ -306,9 +306,9 @@ function CatalogContent({
     } finally {
       setRetryKind(null);
     }
-  }
+  };
 
-  async function loadNextPage(isRetry = false) {
+  const loadNextPage = async (isRetry = false) => {
     const canLoadMore =
       availableMovies.length > visibleMovieLimit || hasNextPage;
 
@@ -352,7 +352,7 @@ function CatalogContent({
         setRetryKind(null);
       }
     }
-  }
+  };
 
   const errorTitle = isSearchMode
     ? "We could not load the search results"
