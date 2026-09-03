@@ -21,7 +21,7 @@ export function SearchInput({
         id={id}
         type="search"
         value={value}
-        className={`movie-search-input min-h-12 w-full min-w-0 rounded-full border border-border bg-surface px-4 text-base text-foreground transition-colors placeholder:text-muted-foreground hover:border-muted-foreground active:border-primary disabled:cursor-not-allowed disabled:opacity-50 ${hasValue && onClear ? "pr-14" : ""} ${className}`}
+        className={`movie-search-input min-h-11 w-full min-w-0 rounded-full border border-border bg-surface px-4 text-base text-foreground transition-colors placeholder:text-muted-foreground hover:border-muted-foreground active:border-primary disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-12 ${hasValue && onClear ? "pr-14" : ""} ${className}`}
       />
       {hasValue && onClear ? (
         <button

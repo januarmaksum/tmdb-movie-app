@@ -19,8 +19,50 @@ export function CategoryFilter({
   disabled = false,
 }: CategoryFilterProps) {
   return (
-    <div>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Movie categories">
+    <div className="shrink-0">
+      <label htmlFor="mobile-movie-category" className="sr-only">
+        Movie category
+      </label>
+      <div className="relative sm:hidden">
+        <select
+          id="mobile-movie-category"
+          value={selectedCategory ?? ""}
+          disabled={disabled}
+          onChange={(event) =>
+            onCategoryChange?.(event.target.value as MovieCategory)
+          }
+          className="min-h-11 w-31 cursor-pointer appearance-none rounded-full border border-border bg-surface py-2 pr-9 pl-3 text-xs font-semibold text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <option value="" disabled>
+            Category
+          </option>
+          {MOVIE_CATEGORIES.map((category) => (
+            <option key={category} value={category}>
+              {categoryLabels[category]}
+            </option>
+          ))}
+        </select>
+        <svg
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+        >
+          <path
+            d="m5 7.5 5 5 5-5"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.75"
+          />
+        </svg>
+      </div>
+
+      <div
+        className="hidden flex-wrap gap-2 sm:flex"
+        role="group"
+        aria-label="Movie categories"
+      >
         {MOVIE_CATEGORIES.map((category) => {
           const isSelected = category === selectedCategory;
 

@@ -10,11 +10,11 @@ export function CatalogHeading({
   status,
 }: CatalogHeadingProps) {
   return (
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+    <div className="mb-4 flex flex-wrap items-end justify-between gap-3 sm:mb-5">
       <div className="min-w-0">
         <h2
           id="catalog-heading"
-          className="text-3xl font-semibold text-primary"
+          className="text-2xl font-semibold text-primary sm:text-3xl"
         >
           {heading}
         </h2>
