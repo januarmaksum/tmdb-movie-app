@@ -3,7 +3,6 @@ import {
   HydrationBoundary,
 } from "@tanstack/react-query";
 import type { Metadata } from "next";
-import { CatalogLink } from "@/components/movies/catalog-link";
 import { MovieDetail } from "@/components/movies/movie-detail";
 import {
   getMovieDetailsForPage,
@@ -47,11 +46,8 @@ export default async function MovieDetailPage({
   });
 
   return (
-    <>
-      <CatalogLink />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <MovieDetail movieId={movieId} />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MovieDetail movieId={movieId} />
+    </HydrationBoundary>
   );
 }

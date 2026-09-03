@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { movieDetailQueryOptions } from "@/lib/movie-detail-query";
 import type { CastMember, MovieDetails } from "@/types/movie";
+import { CatalogLink } from "./catalog-link";
 
 const POSTER_FALLBACK_URL = "/poster-placeholder.svg";
 
@@ -15,50 +16,72 @@ export function MovieDetail({ movieId }: MovieDetailProps) {
   const { data: movie } = useSuspenseQuery(movieDetailQueryOptions(movieId));
 
   return (
-    <article className="mt-8 pb-6 sm:mt-10 sm:pb-10">
-      <div className="grid items-start gap-8 md:grid-cols-[minmax(14rem,20rem)_minmax(0,1fr)] md:gap-10 lg:gap-14">
-        <MoviePoster movie={movie} />
+    <article className="pb-6 sm:pb-10">
+      <section className="relative left-1/2 -mt-8 w-screen -translate-x-1/2 overflow-hidden sm:-mt-10 lg:-mt-12">
+        {movie.backdropUrl ? (
+          <div className="absolute inset-0" aria-hidden="true">
+            <Image
+              src={movie.backdropUrl}
+              alt=""
+              fill
+              sizes="100vw"
+              className="scale-105 object-cover blur-sm"
+            />
+            <div className="absolute inset-0 bg-black/10" />
+            <div className="absolute inset-0 bg-linear-to-b from-background/20 via-background/70 to-background" />
+          </div>
+        ) : null}
 
-        <div className="min-w-0">
-          <h1 className="text-4xl leading-tight font-semibold tracking-[-0.04em] text-balance wrap-anywhere sm:text-5xl lg:text-6xl">
-            {movie.title}
-          </h1>
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-(--page-gutter) pt-8 pb-12 sm:pt-10 sm:pb-14 lg:pt-12">
+          <CatalogLink />
 
-          {movie.tagline ? (
-            <p className="mt-4 max-w-2xl text-lg leading-7 text-muted-foreground italic">
-              “{movie.tagline}”
-            </p>
-          ) : null}
+          <div className="mt-8 grid items-start gap-8 sm:mt-10 md:grid-cols-[minmax(14rem,20rem)_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <MoviePoster movie={movie} />
 
-          <MovieFacts movie={movie} />
+            <div className="min-w-0">
+              <h1 className="text-4xl leading-tight font-semibold tracking-[-0.04em] text-balance wrap-anywhere sm:text-5xl lg:text-6xl">
+                {movie.title}
+              </h1>
 
-          <section className="mt-8" aria-labelledby="synopsis-heading">
-            <h2
-              id="synopsis-heading"
-              className="text-xl font-semibold tracking-[-0.02em] text-foreground"
-            >
-              Synopsis
-            </h2>
-            <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              {movie.overview ?? "Synopsis unavailable."}
-            </p>
-          </section>
+              {movie.tagline ? (
+                <p className="mt-4 max-w-2xl text-lg leading-7 text-foreground/80 italic">
+                  “{movie.tagline}”
+                </p>
+              ) : null}
 
-          <section className="mt-8" aria-labelledby="director-heading">
-            <h2
-              id="director-heading"
-              className="text-xl font-semibold tracking-[-0.02em] text-foreground"
-            >
-              Director
-            </h2>
-            <p className="mt-3 text-base leading-7 text-muted-foreground">
-              {movie.directors.length > 0
-                ? movie.directors.map((director) => director.name).join(", ")
-                : "Director unavailable."}
-            </p>
-          </section>
+              <MovieFacts movie={movie} />
+
+              <section className="mt-8" aria-labelledby="synopsis-heading">
+                <h2
+                  id="synopsis-heading"
+                  className="text-xl font-semibold tracking-[-0.02em] text-foreground"
+                >
+                  Synopsis
+                </h2>
+                <p className="mt-3 max-w-3xl text-base leading-7 text-foreground/80 sm:text-lg sm:leading-8">
+                  {movie.overview ?? "Synopsis unavailable."}
+                </p>
+              </section>
+
+              <section className="mt-8" aria-labelledby="director-heading">
+                <h2
+                  id="director-heading"
+                  className="text-xl font-semibold tracking-[-0.02em] text-foreground"
+                >
+                  Director
+                </h2>
+                <p className="mt-3 text-base leading-7 text-foreground/80">
+                  {movie.directors.length > 0
+                    ? movie.directors
+                        .map((director) => director.name)
+                        .join(", ")
+                    : "Director unavailable."}
+                </p>
+              </section>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       <CastSection cast={movie.cast} />
     </article>
@@ -101,7 +124,7 @@ function MovieFacts({ movie }: { movie: MovieDetails }) {
       {facts.map((fact, index) => (
         <li
           key={`${fact}:${index}`}
-          className="rounded-full border border-border bg-surface px-3 py-1.5 text-sm leading-5 text-muted-foreground"
+          className="rounded-full border border-border bg-background/70 px-3 py-1.5 text-sm leading-5 text-foreground/80 backdrop-blur-sm"
         >
           {fact}
         </li>
