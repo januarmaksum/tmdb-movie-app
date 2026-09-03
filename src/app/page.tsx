@@ -11,7 +11,7 @@ import {
   MovieCatalogLoading,
 } from "@/components/movies/movie-catalog";
 import { parseMovieCatalogSearchParams } from "@/lib/movie-catalog-state";
-import { movieListQueryOptions } from "@/lib/movie-list-query";
+import { movieListInfiniteQueryOptions } from "@/lib/movie-list-query";
 import { getQueryClient } from "@/lib/query-client";
 import { getMovies } from "@/lib/tmdb-movies.server";
 
@@ -52,16 +52,15 @@ export default function Home({ searchParams }: HomeProps) {
 
 async function MovieCatalogData({ searchParams }: HomeProps) {
   const catalogState = parseMovieCatalogSearchParams(await searchParams);
-  const movieListRequest = {
-    ...catalogState,
-    page: 1,
-  };
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery({
-    ...movieListQueryOptions(movieListRequest),
-    queryFn: () => getMovies(movieListRequest),
-  });
+  void queryClient
+    .infiniteQuery({
+      ...movieListInfiniteQueryOptions(catalogState),
+      queryFn: ({ pageParam }) =>
+        getMovies({ ...catalogState, page: pageParam }),
+    })
+    .catch(() => undefined);
 
   return (
     <HydrationBoundary

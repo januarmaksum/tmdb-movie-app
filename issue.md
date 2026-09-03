@@ -123,15 +123,15 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 
 **Dependencies:** Search and categories
 
-- [ ] Implement catalog queries with TanStack `useInfiniteQuery`.
-- [ ] Use an explicit Load More button rather than automatic infinite scroll.
-- [ ] Derive the next page from the latest TMDB page response.
-- [ ] Append new results while preserving already-loaded cards.
-- [ ] Disable the button and show progress while the next page is loading.
-- [ ] Prevent duplicate requests from repeated clicks.
-- [ ] Hide the button when the current page reaches `totalPages`.
-- [ ] Keep the existing catalog visible when a next-page request fails and provide a retry action.
-- [ ] Reset accumulated pages when search or category state changes.
+- [x] Implement catalog queries with TanStack `useInfiniteQuery`.
+- [x] Use an explicit Load More button rather than automatic infinite scroll.
+- [x] Derive the next page from the latest TMDB page response.
+- [x] Append new results while preserving already-loaded cards.
+- [x] Disable the button and show progress while the next page is loading.
+- [x] Prevent duplicate requests from repeated clicks.
+- [x] Hide the button when the current page reaches `totalPages`.
+- [x] Keep the existing catalog visible when a next-page request fails and provide a retry action.
+- [x] Reset accumulated pages when search or category state changes.
 
 **Definition of done**
 

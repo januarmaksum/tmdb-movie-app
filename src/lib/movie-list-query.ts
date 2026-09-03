@@ -1,20 +1,24 @@
-import { keepPreviousData, queryOptions } from "@tanstack/react-query";
+import {
+  infiniteQueryOptions,
+  keepPreviousData,
+  type InfiniteData,
+} from "@tanstack/react-query";
 import { movieKeys } from "@/lib/movie-query-keys";
 import type { ApiError, MovieCategory, MoviePage } from "@/types/movie";
 
 export type MovieListQueryInput = {
   category: MovieCategory;
-  page: number;
   query: string;
 };
 
 async function fetchMovieList(
   input: MovieListQueryInput,
+  page: number,
   signal: AbortSignal,
 ): Promise<MoviePage> {
   const searchParams = new URLSearchParams({
     category: input.category,
-    page: String(input.page),
+    page: String(page),
   });
 
   if (input.query) {
@@ -35,10 +39,25 @@ async function fetchMovieList(
   return response.json() as Promise<MoviePage>;
 }
 
-export function movieListQueryOptions(input: MovieListQueryInput) {
-  return queryOptions({
+export function movieListInfiniteQueryOptions(input: MovieListQueryInput) {
+  return infiniteQueryOptions<
+    MoviePage,
+    Error,
+    InfiniteData<MoviePage, number>,
+    ReturnType<typeof movieKeys.list>,
+    number
+  >({
     queryKey: movieKeys.list(input),
-    queryFn: ({ signal }) => fetchMovieList(input, signal),
+    queryFn: ({ pageParam, signal }) =>
+      fetchMovieList(input, pageParam, signal),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < 1 || lastPage.page >= lastPage.totalPages) {
+        return undefined;
+      }
+
+      return lastPage.page + 1;
+    },
     placeholderData: keepPreviousData,
     retry: false,
   });

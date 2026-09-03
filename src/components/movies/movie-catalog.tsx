@@ -1,10 +1,15 @@
 "use client";
 
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  type InfiniteData,
+  type UseInfiniteQueryResult,
+} from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -14,8 +19,8 @@ import {
   parseMovieCatalogUrlSearchParams,
   type MovieCatalogState,
 } from "@/lib/movie-catalog-state";
-import { movieListQueryOptions } from "@/lib/movie-list-query";
-import type { MovieCategory, MoviePage } from "@/types/movie";
+import { movieListInfiniteQueryOptions } from "@/lib/movie-list-query";
+import type { MovieCategory, MoviePage, MovieSummary } from "@/types/movie";
 import { EmptyState, ErrorState } from "./catalog-feedback";
 import { CatalogHeading } from "./catalog-heading";
 import { CategoryFilter, getCategoryLabel } from "./category-filter";
@@ -31,11 +36,13 @@ export function MovieCatalog() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const catalogState = parseMovieCatalogUrlSearchParams(searchParams);
-  const movieListRequest = {
-    ...catalogState,
-    page: 1,
-  };
-  const queryResult = useQuery(movieListQueryOptions(movieListRequest));
+  const queryResult = useInfiniteQuery(
+    movieListInfiniteQueryOptions(catalogState),
+  );
+  const movies = useMemo(
+    () => collectUniqueMovies(queryResult.data),
+    [queryResult.data],
+  );
   const isSearchMode = catalogState.query.length > 0;
 
   const updateCatalogUrl = useCallback(
@@ -117,7 +124,8 @@ export function MovieCatalog() {
         eyebrow: getCategoryLabel(catalogState.category),
         heading: "Movies to explore",
       };
-  const loadingStatus = queryResult.isFetching
+  const loadingStatus =
+    queryResult.isFetching && !queryResult.isFetchingNextPage
     ? isSearchMode
       ? `Searching for “${catalogState.query}”…`
       : `Updating ${getCategoryLabel(catalogState.category)} movies…`
@@ -139,9 +147,7 @@ export function MovieCatalog() {
 
       <CatalogHeading
         {...headingProps}
-        resultCount={
-          loadingStatus ? undefined : queryResult.data?.results.length
-        }
+        resultCount={loadingStatus ? undefined : movies.length}
         status={loadingStatus}
       />
 
@@ -149,6 +155,7 @@ export function MovieCatalog() {
         key={`catalog-content:${catalogState.category}:${catalogState.query}`}
         catalogState={catalogState}
         isSearchMode={isSearchMode}
+        movies={movies}
         queryResult={queryResult}
         onClearSearch={clearSearch}
       />
@@ -235,18 +242,34 @@ function SearchControls({
 type CatalogContentProps = {
   catalogState: MovieCatalogState;
   isSearchMode: boolean;
-  queryResult: UseQueryResult<MoviePage, Error>;
+  movies: MovieSummary[];
+  queryResult: UseInfiniteQueryResult<
+    InfiniteData<MoviePage, number>,
+    Error
+  >;
   onClearSearch: () => void;
 };
 
 function CatalogContent({
   catalogState,
   isSearchMode,
+  movies,
   queryResult,
   onClearSearch,
 }: CatalogContentProps) {
-  const { data, isError, isPending, refetch } = queryResult;
-  const [retryKind, setRetryKind] = useState<"error" | "empty" | null>(null);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isError,
+    isFetchNextPageError,
+    isFetchingNextPage,
+    isPending,
+    refetch,
+  } = queryResult;
+  const [retryKind, setRetryKind] = useState<
+    "error" | "empty" | "next-page" | null
+  >(null);
 
   async function retryCatalog(kind: "error" | "empty") {
     setRetryKind(kind);
@@ -255,6 +278,24 @@ function CatalogContent({
       await refetch();
     } finally {
       setRetryKind(null);
+    }
+  }
+
+  async function loadNextPage(isRetry = false) {
+    if (!hasNextPage || isFetchingNextPage) {
+      return;
+    }
+
+    if (isRetry) {
+      setRetryKind("next-page");
+    }
+
+    try {
+      await fetchNextPage({ cancelRefetch: false });
+    } finally {
+      if (isRetry) {
+        setRetryKind(null);
+      }
     }
   }
 
@@ -289,7 +330,7 @@ function CatalogContent({
     return <CatalogGridSkeleton />;
   }
 
-  if (isError) {
+  if (isError && !data) {
     return (
       <ErrorState
         title={errorTitle}
@@ -299,7 +340,7 @@ function CatalogContent({
     );
   }
 
-  if (data.results.length === 0) {
+  if (movies.length === 0) {
     return isSearchMode ? (
       <EmptyState
         title="No movies found"
@@ -322,15 +363,80 @@ function CatalogContent({
     );
   }
 
+  const isRetryingNextPage = retryKind === "next-page";
+
   return (
-    <MovieGrid>
-      {data.results.map((movie, index) => (
-        <li key={movie.id} className="min-w-0">
-          <MovieCard movie={movie} loading={index === 0 ? "eager" : "lazy"} />
-        </li>
-      ))}
-    </MovieGrid>
+    <>
+      <MovieGrid>
+        {movies.map((movie, index) => (
+          <li key={movie.id} className="min-w-0">
+            <MovieCard
+              movie={movie}
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+          </li>
+        ))}
+      </MovieGrid>
+
+      {isFetchNextPageError || isRetryingNextPage ? (
+        <div
+          role="alert"
+          className="mt-10 rounded-lg border border-destructive/60 bg-surface px-5 py-6 text-center"
+        >
+          <p className="font-semibold text-foreground">
+            We could not load more movies.
+          </p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Your loaded movies are still here. Try loading the next page again.
+          </p>
+          <div className="mt-5">
+            <CatalogActionButton
+              onClick={() => void loadNextPage(true)}
+              disabled={isRetryingNextPage}
+              ariaLabel={
+                isRetryingNextPage
+                  ? "Retrying the next page of movies"
+                  : "Retry loading the next page of movies"
+              }
+            >
+              {isRetryingNextPage ? "Trying again…" : "Try loading more again"}
+            </CatalogActionButton>
+          </div>
+        </div>
+      ) : hasNextPage ? (
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <CatalogActionButton
+            onClick={() => void loadNextPage()}
+            disabled={isFetchingNextPage}
+            ariaLabel={
+              isFetchingNextPage
+                ? "Loading the next page of movies"
+                : "Load more movies"
+            }
+          >
+            {isFetchingNextPage ? "Loading more…" : "Load more"}
+          </CatalogActionButton>
+          <p role="status" aria-live="polite" className="sr-only">
+            {isFetchingNextPage ? "Loading more movies" : ""}
+          </p>
+        </div>
+      ) : null}
+    </>
   );
+}
+
+function collectUniqueMovies(data?: InfiniteData<MoviePage, number>) {
+  const moviesById = new Map<number, MovieSummary>();
+
+  for (const page of data?.pages ?? []) {
+    for (const movie of page.results) {
+      if (!moviesById.has(movie.id)) {
+        moviesById.set(movie.id, movie);
+      }
+    }
+  }
+
+  return [...moviesById.values()];
 }
 
 type CatalogActionButtonProps = {
