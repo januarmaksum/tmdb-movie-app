@@ -103,6 +103,8 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 - [x] Add a controlled title search input with a 350 ms debounce.
 - [x] Trim search input before issuing a request; whitespace-only input restores category mode.
 - [x] Store the current category and search query in URL search parameters using `category` and `q`.
+- [x] Show the active query in the search-results heading.
+- [x] Preserve input focus when a debounced or submitted search updates the catalog.
 - [x] Entering a non-empty search switches the catalog to search mode.
 - [x] Selecting a category clears the current search and returns to category mode.
 - [x] Reset pagination whenever the category or normalized search query changes.
@@ -129,6 +131,8 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 - [x] Append new results while preserving already-loaded cards.
 - [x] Disable the button and show progress while the next page is loading.
 - [x] Prevent duplicate requests from repeated clicks.
+- [x] Append up to 20 unique movies per click and buffer extra fetched results.
+- [x] Fetch additional TMDB pages when cross-page duplicates would leave a partial five-column desktop row.
 - [x] Hide the button when the current page reaches `totalPages`.
 - [x] Keep the existing catalog visible when a next-page request fails and provide a retry action.
 - [x] Reset accumulated pages when search or category state changes.

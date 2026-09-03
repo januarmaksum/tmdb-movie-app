@@ -69,6 +69,15 @@ body {
   color: var(--primary-foreground);
 }
 
+.movie-search-input::-webkit-search-cancel-button {
+  display: none;
+  appearance: none;
+}
+
+.movie-search-input::-ms-clear {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -31,6 +31,7 @@ import { SkeletonCard } from "./skeleton-card";
 
 const SEARCH_DEBOUNCE_MS = 350;
 const SKELETON_COUNT = 10;
+const MOVIES_PER_LOAD = 20;
 
 export function MovieCatalog() {
   const pathname = usePathname();
@@ -44,6 +45,17 @@ export function MovieCatalog() {
     [queryResult.data],
   );
   const isSearchMode = catalogState.query.length > 0;
+  const catalogKey = `${catalogState.category}:${catalogState.query}`;
+  const [displayState, setDisplayState] = useState({
+    catalogKey,
+    limit: MOVIES_PER_LOAD,
+  });
+
+  if (displayState.catalogKey !== catalogKey) {
+    setDisplayState({ catalogKey, limit: MOVIES_PER_LOAD });
+  }
+
+  const visibleMovies = movies.slice(0, displayState.limit);
 
   const updateCatalogUrl = useCallback(
     (nextState: MovieCatalogState, historyMode: "push" | "replace") => {
@@ -117,12 +129,10 @@ export function MovieCatalog() {
 
   const headingProps = isSearchMode
     ? {
-        eyebrow: "Search results",
-        heading: `Results for “${catalogState.query}”`,
+        heading: `Search results for “${catalogState.query}”`,
       }
     : {
-        eyebrow: getCategoryLabel(catalogState.category),
-        heading: "Movies to explore",
+        heading: getCategoryLabel(catalogState.category),
       };
   const loadingStatus =
     queryResult.isFetching && !queryResult.isFetchingNextPage
@@ -137,7 +147,6 @@ export function MovieCatalog() {
       aria-busy={queryResult.isFetching}
     >
       <SearchControls
-        key={`search-controls:${catalogState.category}:${catalogState.query}`}
         initialQuery={catalogState.query}
         selectedCategory={isSearchMode ? null : catalogState.category}
         onSearchCommit={commitSearch}
@@ -146,7 +155,7 @@ export function MovieCatalog() {
 
       <CatalogHeading
         {...headingProps}
-        resultCount={loadingStatus ? undefined : movies.length}
+        resultCount={loadingStatus ? undefined : visibleMovies.length}
         status={loadingStatus}
       />
 
@@ -154,9 +163,14 @@ export function MovieCatalog() {
         key={`catalog-content:${catalogState.category}:${catalogState.query}`}
         catalogState={catalogState}
         isSearchMode={isSearchMode}
-        movies={movies}
+        availableMovies={movies}
+        visibleMovies={visibleMovies}
+        visibleMovieLimit={displayState.limit}
         queryResult={queryResult}
         onClearSearch={clearSearch}
+        onVisibleMovieLimitChange={(limit) =>
+          setDisplayState({ catalogKey, limit })
+        }
       />
     </section>
   );
@@ -176,7 +190,13 @@ function SearchControls({
   onCategoryChange,
 }: SearchControlsProps) {
   const [searchValue, setSearchValue] = useState(initialQuery);
+  const [syncedQuery, setSyncedQuery] = useState(initialQuery);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  if (syncedQuery !== initialQuery) {
+    setSyncedQuery(initialQuery);
+    setSearchValue(initialQuery);
+  }
 
   const clearDebounceTimer = useCallback(() => {
     if (debounceTimerRef.current !== null) {
@@ -213,13 +233,14 @@ function SearchControls({
   }
 
   return (
-    <div className="mb-10 rounded-lg border border-border bg-surface/60 p-4 sm:p-6">
+    <div className="mb-10 rounded-bl-lg rounded-br-lg border border-border bg-surface/60 p-4 sm:p-6">
       <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <form role="search" onSubmit={handleSearchSubmit} className="min-w-0">
           <SearchInput
             value={searchValue}
             onChange={(event) => setSearchValue(event.target.value)}
-            placeholder="Search by title"
+            onClear={() => setSearchValue("")}
+            placeholder="Search movie by title"
             aria-describedby="search-helper-text"
           />
         </form>
@@ -235,20 +256,26 @@ function SearchControls({
 type CatalogContentProps = {
   catalogState: MovieCatalogState;
   isSearchMode: boolean;
-  movies: MovieSummary[];
+  availableMovies: MovieSummary[];
+  visibleMovies: MovieSummary[];
+  visibleMovieLimit: number;
   queryResult: UseInfiniteQueryResult<
     InfiniteData<MoviePage, number>,
     Error
   >;
   onClearSearch: () => void;
+  onVisibleMovieLimitChange: (limit: number) => void;
 };
 
 function CatalogContent({
   catalogState,
   isSearchMode,
-  movies,
+  availableMovies,
+  visibleMovies,
+  visibleMovieLimit,
   queryResult,
   onClearSearch,
+  onVisibleMovieLimitChange,
 }: CatalogContentProps) {
   const {
     data,
@@ -263,6 +290,8 @@ function CatalogContent({
   const [retryKind, setRetryKind] = useState<
     "error" | "empty" | "next-page" | null
   >(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const loadMoreInProgressRef = useRef(false);
 
   async function retryCatalog(kind: "error" | "empty") {
     setRetryKind(kind);
@@ -275,17 +304,45 @@ function CatalogContent({
   }
 
   async function loadNextPage(isRetry = false) {
-    if (!hasNextPage || isFetchingNextPage) {
+    const canLoadMore =
+      availableMovies.length > visibleMovieLimit || hasNextPage;
+
+    if (!canLoadMore || loadMoreInProgressRef.current) {
       return;
     }
+
+    loadMoreInProgressRef.current = true;
+    setIsLoadingMore(true);
 
     if (isRetry) {
       setRetryKind("next-page");
     }
 
     try {
-      await fetchNextPage({ cancelRefetch: false });
+      const targetMovieCount = visibleMovieLimit + MOVIES_PER_LOAD;
+      let nextMovies = availableMovies;
+      let canFetchNextPage = hasNextPage;
+
+      while (nextMovies.length < targetMovieCount && canFetchNextPage) {
+        const nextPageResult = await fetchNextPage({ cancelRefetch: false });
+
+        if (nextPageResult.isFetchNextPageError) {
+          return;
+        }
+
+        nextMovies = collectUniqueMovies(nextPageResult.data);
+        canFetchNextPage = nextPageResult.hasNextPage;
+      }
+
+      if (nextMovies.length >= targetMovieCount) {
+        onVisibleMovieLimitChange(targetMovieCount);
+      } else if (!canFetchNextPage) {
+        onVisibleMovieLimitChange(nextMovies.length);
+      }
     } finally {
+      loadMoreInProgressRef.current = false;
+      setIsLoadingMore(false);
+
       if (isRetry) {
         setRetryKind(null);
       }
@@ -333,7 +390,7 @@ function CatalogContent({
     );
   }
 
-  if (movies.length === 0) {
+  if (visibleMovies.length === 0) {
     return isSearchMode ? (
       <EmptyState
         title="No movies found"
@@ -357,11 +414,13 @@ function CatalogContent({
   }
 
   const isRetryingNextPage = retryKind === "next-page";
+  const canLoadMore =
+    availableMovies.length > visibleMovieLimit || hasNextPage;
 
   return (
     <>
       <MovieGrid>
-        {movies.map((movie, index) => (
+        {visibleMovies.map((movie, index) => (
           <li key={movie.id} className="min-w-0">
             <MovieCard
               movie={movie}
@@ -396,21 +455,25 @@ function CatalogContent({
             </CatalogActionButton>
           </div>
         </div>
-      ) : hasNextPage ? (
+      ) : canLoadMore ? (
         <div className="mt-10 flex flex-col items-center gap-3">
           <CatalogActionButton
             onClick={() => void loadNextPage()}
-            disabled={isFetchingNextPage}
+            disabled={isLoadingMore || isFetchingNextPage}
             ariaLabel={
-              isFetchingNextPage
+              isLoadingMore || isFetchingNextPage
                 ? "Loading the next page of movies"
                 : "Load more movies"
             }
           >
-            {isFetchingNextPage ? "Loading more…" : "Load more"}
+            {isLoadingMore || isFetchingNextPage
+              ? "Loading more…"
+              : "Load more"}
           </CatalogActionButton>
           <p role="status" aria-live="polite" className="sr-only">
-            {isFetchingNextPage ? "Loading more movies" : ""}
+            {isLoadingMore || isFetchingNextPage
+              ? "Loading more movies"
+              : ""}
           </p>
         </div>
       ) : null}

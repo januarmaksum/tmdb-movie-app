@@ -20,10 +20,7 @@ export function MovieDetail({ movieId }: MovieDetailProps) {
         <MoviePoster movie={movie} />
 
         <div className="min-w-0">
-          <p className="text-sm font-semibold tracking-[0.18em] text-primary uppercase">
-            Movie details
-          </p>
-          <h1 className="mt-3 text-4xl leading-tight font-semibold tracking-[-0.04em] text-balance wrap-anywhere sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl leading-tight font-semibold tracking-[-0.04em] text-balance wrap-anywhere sm:text-5xl lg:text-6xl">
             {movie.title}
           </h1>
 

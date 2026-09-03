@@ -24,7 +24,7 @@ type HomeProps = {
 export default function Home({ searchParams }: HomeProps) {
   return (
     <div className="flex min-h-dvh flex-1 flex-col bg-background">
-      <main id="main-content" className="flex-1 py-10 sm:py-14 lg:py-16">
+      <main id="main-content" className="flex-1 pb-10 sm:pb-14 lg:pb-16">
         <PageContainer>
           <Suspense fallback={<MovieCatalogLoading />}>
             <MovieCatalogData searchParams={searchParams} />

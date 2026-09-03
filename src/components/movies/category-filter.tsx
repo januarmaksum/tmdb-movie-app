@@ -31,7 +31,7 @@ export function CategoryFilter({
               aria-pressed={isSelected}
               disabled={disabled}
               onClick={() => onCategoryChange?.(category)}
-              className={`min-h-11 cursor-pointer rounded-md border px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`min-h-11 cursor-pointer rounded-full border px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 isSelected
                   ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                   : "border-border bg-surface text-muted-foreground hover:border-muted-foreground hover:text-foreground active:bg-surface-raised"

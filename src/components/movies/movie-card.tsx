@@ -34,10 +34,8 @@ export function MovieCard({ movie, loading = "lazy" }: MovieCardProps) {
         <div className="pt-3">
           <h3 className="min-w-0 text-base leading-6 font-semibold text-foreground transition-colors wrap-anywhere group-hover:text-primary group-active:text-primary">
             {movie.title}
+            {movie.releaseYear && ` (${movie.releaseYear})`}
           </h3>
-          <p className="mt-1 text-sm leading-5 text-muted-foreground">
-            {movie.releaseYear ?? "Year unavailable"}
-          </p>
         </div>
       </article>
     </Link>
