@@ -18,9 +18,10 @@ import {
   normalizeMovieQuery,
   parseMovieCatalogUrlSearchParams,
   type MovieCatalogState,
-} from "@/lib/movie-catalog-state";
-import { movieListInfiniteQueryOptions } from "@/lib/movie-list-query";
-import type { MovieCategory, MoviePage, MovieSummary } from "@/types/movie";
+} from "@/services/movie-list/catalog-state";
+import { movieListInfiniteQueryOptions } from "@/services/movie-list/query";
+import type { MovieCategory, MoviePage } from "@/services/movie-list/types";
+import type { MovieSummary } from "@/services/_shared/movie-summary.types";
 import { EmptyState, ErrorState } from "./catalog-feedback";
 import { CatalogHeading } from "./catalog-heading";
 import { CategoryFilter, getCategoryLabel } from "./category-filter";

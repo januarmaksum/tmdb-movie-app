@@ -2,8 +2,8 @@
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { movieDetailQueryOptions } from "@/lib/movie-detail-query";
-import type { CastMember, MovieDetails } from "@/types/movie";
+import { movieDetailQueryOptions } from "@/services/movie-detail/query";
+import type { CastMember, MovieDetails } from "@/services/movie-detail/types";
 import { CatalogLink } from "./catalog-link";
 
 const POSTER_FALLBACK_URL = "/poster-placeholder.svg";

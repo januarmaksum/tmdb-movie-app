@@ -1,4 +1,7 @@
-import { MOVIE_CATEGORIES, type MovieCategory } from "@/types/movie";
+import {
+  MOVIE_CATEGORIES,
+  type MovieCategory,
+} from "@/services/movie-list/types";
 
 const categoryLabels: Record<MovieCategory, string> = {
   now_playing: "Now Playing",

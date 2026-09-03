@@ -4,12 +4,12 @@ import {
 } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { MovieDetail } from "@/components/movies/movie-detail";
+import { getQueryClient } from "@/lib/query-client";
+import { movieDetailQueryOptions } from "@/services/movie-detail/query";
 import {
   getMovieDetailsForPage,
   parseMoviePageId,
-} from "@/lib/movie-detail.server";
-import { movieDetailQueryOptions } from "@/lib/movie-detail-query";
-import { getQueryClient } from "@/lib/query-client";
+} from "@/services/movie-detail/server";
 
 export async function generateMetadata({
   params,

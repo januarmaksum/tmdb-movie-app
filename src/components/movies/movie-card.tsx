@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { MovieSummary } from "@/types/movie";
+import type { MovieSummary } from "@/services/_shared/movie-summary.types";
 
 const POSTER_FALLBACK_URL = "/poster-placeholder.svg";
 

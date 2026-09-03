@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { tmdbErrorResponse } from "@/lib/api-error-response";
-import { parseMovieId } from "@/lib/movie-request";
-import { getMovieDetails } from "@/lib/tmdb-movies.server";
+import { parseMovieId } from "@/services/movie-detail/request";
+import { getMovieDetails } from "@/services/movie-detail/server";
+import { tmdbErrorResponse } from "@/services/tmdb/error-response";
 
 export async function GET(
   _request: Request,

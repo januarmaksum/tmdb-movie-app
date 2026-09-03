@@ -1,39 +1,24 @@
+import { InvalidMovieRequestError } from "@/services/_shared/request-error";
 import {
   MOVIE_CATEGORIES,
   type MovieCategory,
-} from "@/types/movie";
+  type MovieListRequest,
+} from "@/services/movie-list/types";
 
-const MAX_TMDB_MOVIE_ID = 2_147_483_647;
-
-export type MovieListRequest = {
-  category: MovieCategory;
-  page: number;
-  query: string;
-};
-
-export class InvalidMovieRequestError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "InvalidMovieRequestError";
-  }
-}
+export { InvalidMovieRequestError } from "@/services/_shared/request-error";
 
 function isMovieCategory(value: string): value is MovieCategory {
   return MOVIE_CATEGORIES.some((category) => category === value);
 }
 
-function parsePositiveInteger(
-  value: string,
-  label: string,
-  maximum = Number.MAX_SAFE_INTEGER,
-) {
+function parsePositiveInteger(value: string, label: string) {
   if (!/^\d+$/.test(value)) {
     throw new InvalidMovieRequestError(`${label} must be a positive integer.`);
   }
 
   const parsed = Number(value);
 
-  if (!Number.isSafeInteger(parsed) || parsed <= 0 || parsed > maximum) {
+  if (!Number.isSafeInteger(parsed) || parsed <= 0) {
     throw new InvalidMovieRequestError(`${label} must be a positive integer.`);
   }
 
@@ -56,8 +41,4 @@ export function parseMovieListRequest(
     page: parsePositiveInteger(pageValue, "Page"),
     query: searchParams.get("query")?.trim() ?? "",
   };
-}
-
-export function parseMovieId(value: string) {
-  return parsePositiveInteger(value, "Movie ID", MAX_TMDB_MOVIE_ID);
 }

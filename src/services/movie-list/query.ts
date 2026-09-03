@@ -3,8 +3,9 @@ import {
   keepPreviousData,
   type InfiniteData,
 } from "@tanstack/react-query";
-import { movieKeys } from "@/lib/movie-query-keys";
-import type { ApiError, MovieCategory, MoviePage } from "@/types/movie";
+import type { ApiError } from "@/services/_shared/api-error.types";
+import { movieListKeys } from "@/services/movie-list/query-keys";
+import type { MovieCategory, MoviePage } from "@/services/movie-list/types";
 
 export type MovieListQueryInput = {
   category: MovieCategory;
@@ -21,19 +22,13 @@ async function fetchMovieList(
     page: String(page),
   });
 
-  if (input.query) {
-    searchParams.set("query", input.query);
-  }
+  if (input.query) searchParams.set("query", input.query);
 
-  const response = await fetch(`/api/movies?${searchParams.toString()}`, {
-    signal,
-  });
+  const response = await fetch(`/api/movies?${searchParams.toString()}`, { signal });
 
   if (!response.ok) {
     const payload = (await response.json().catch(() => null)) as ApiError | null;
-    throw new Error(
-      payload?.error.message ?? "The movie catalog could not be loaded.",
-    );
+    throw new Error(payload?.error.message ?? "The movie catalog could not be loaded.");
   }
 
   return response.json() as Promise<MoviePage>;
@@ -44,20 +39,16 @@ export function movieListInfiniteQueryOptions(input: MovieListQueryInput) {
     MoviePage,
     Error,
     InfiniteData<MoviePage, number>,
-    ReturnType<typeof movieKeys.list>,
+    ReturnType<typeof movieListKeys.list>,
     number
   >({
-    queryKey: movieKeys.list(input),
-    queryFn: ({ pageParam, signal }) =>
-      fetchMovieList(input, pageParam, signal),
+    queryKey: movieListKeys.list(input),
+    queryFn: ({ pageParam, signal }) => fetchMovieList(input, pageParam, signal),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      if (lastPage.page < 1 || lastPage.page >= lastPage.totalPages) {
-        return undefined;
-      }
-
-      return lastPage.page + 1;
-    },
+    getNextPageParam: (lastPage) =>
+      lastPage.page < 1 || lastPage.page >= lastPage.totalPages
+        ? undefined
+        : lastPage.page + 1,
     placeholderData: keepPreviousData,
     retry: false,
   });

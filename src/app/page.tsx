@@ -9,10 +9,10 @@ import {
   MovieCatalog,
   MovieCatalogLoading,
 } from "@/components/movies/movie-catalog";
-import { parseMovieCatalogSearchParams } from "@/lib/movie-catalog-state";
-import { movieListInfiniteQueryOptions } from "@/lib/movie-list-query";
 import { getQueryClient } from "@/lib/query-client";
-import { getMovies } from "@/lib/tmdb-movies.server";
+import { parseMovieCatalogSearchParams } from "@/services/movie-list/catalog-state";
+import { movieListInfiniteQueryOptions } from "@/services/movie-list/query";
+import { getMovies } from "@/services/movie-list/server";
 
 type HomeProps = {
   searchParams: Promise<{
