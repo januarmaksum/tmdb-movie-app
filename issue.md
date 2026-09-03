@@ -76,15 +76,15 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 
 **Dependencies:** API foundation and minimal UI foundation
 
-- [ ] Make Popular the default category.
-- [ ] Prefetch the first Popular page in the Server Component and hydrate it into TanStack Query.
-- [ ] Use the same typed query key for server prefetching and client cache access.
-- [ ] Render the normalized results in the responsive Movie Grid.
-- [ ] Show poster, title, and release year on every card.
-- [ ] Use a meaningful poster alt attribute and stable image dimensions to avoid layout shift.
-- [ ] Link every card to `/movies/{id}`.
-- [ ] Display a fallback poster and `Year unavailable` when source data is missing.
-- [ ] Add initial loading skeletons, empty results, error feedback, and a retry action.
+- [x] Make Popular the default category.
+- [x] Prefetch the first Popular page in the Server Component and hydrate it into TanStack Query.
+- [x] Use the same typed query key for server prefetching and client cache access.
+- [x] Render the normalized results in the responsive Movie Grid.
+- [x] Show poster, title, and release year on every card.
+- [x] Use a meaningful poster alt attribute and stable image dimensions to avoid layout shift.
+- [x] Link every card to `/movies/{id}`.
+- [x] Display a fallback poster and `Year unavailable` when source data is missing.
+- [x] Add initial loading skeletons, empty results, error feedback, and a retry action.
 
 **Definition of done**
 

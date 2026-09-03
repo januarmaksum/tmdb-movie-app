@@ -1,9 +1,22 @@
+import {
+  defaultShouldDehydrateQuery,
+  dehydrate,
+  HydrationBoundary,
+} from "@tanstack/react-query";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { SiteHeader } from "@/components/layout/site-header";
-import { MovieCatalogPreview } from "@/components/movies/movie-catalog-preview";
-import { MovieGrid } from "@/components/movies/movie-grid";
-import { SkeletonCard } from "@/components/movies/skeleton-card";
+import {
+  PopularCatalogLoading,
+  PopularMovieCatalog,
+} from "@/components/movies/popular-movie-catalog";
+import {
+  movieListQueryOptions,
+  popularMovieListRequest,
+} from "@/lib/movie-list-query";
+import { getQueryClient } from "@/lib/query-client";
+import { getMovies } from "@/lib/tmdb-movies.server";
 
 export default function Home() {
   return (
@@ -24,8 +37,8 @@ export default function Home() {
             </p>
           </header>
 
-          <Suspense fallback={<CatalogPreviewFallback />}>
-            <MovieCatalogPreview />
+          <Suspense fallback={<PopularCatalogLoading />}>
+            <PopularCatalogData />
           </Suspense>
         </PageContainer>
       </main>
@@ -33,15 +46,24 @@ export default function Home() {
   );
 }
 
-function CatalogPreviewFallback() {
+async function PopularCatalogData() {
+  await connection();
+
+  const queryClient = getQueryClient();
+
+  void queryClient.prefetchQuery({
+    ...movieListQueryOptions(popularMovieListRequest),
+    queryFn: () => getMovies(popularMovieListRequest),
+  });
+
   return (
-    <section className="mt-10" aria-busy="true" aria-label="Loading movie catalog">
-      <span className="sr-only">Loading movies</span>
-      <MovieGrid>
-        {Array.from({ length: 10 }, (_, index) => (
-          <SkeletonCard key={index} />
-        ))}
-      </MovieGrid>
-    </section>
+    <HydrationBoundary
+      state={dehydrate(queryClient, {
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) || query.state.status === "pending",
+      })}
+    >
+      <PopularMovieCatalog />
+    </HydrationBoundary>
   );
 }
