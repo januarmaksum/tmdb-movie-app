@@ -54,7 +54,7 @@ async function MovieCatalogData({ searchParams }: HomeProps) {
   const catalogState = parseMovieCatalogSearchParams(await searchParams);
   const queryClient = getQueryClient();
 
-  void queryClient
+  await queryClient
     .infiniteQuery({
       ...movieListInfiniteQueryOptions(catalogState),
       queryFn: ({ pageParam }) =>
