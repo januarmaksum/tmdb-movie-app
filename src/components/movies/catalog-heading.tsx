@@ -7,20 +7,13 @@ export type CatalogHeadingProps = {
 
 export function CatalogHeading({
   eyebrow = "Popular",
-  heading = "Movies to explore",
   resultCount,
   status,
 }: CatalogHeadingProps) {
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div className="min-w-0">
-        <p className="text-sm font-semibold text-primary">{eyebrow}</p>
-        <h2
-          id="catalog-heading"
-          className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-foreground wrap-anywhere sm:text-3xl"
-        >
-          {heading}
-        </h2>
+        <p className="text-3xl font-semibold text-primary">{eyebrow}</p>
       </div>
       {status || resultCount !== undefined ? (
         <p

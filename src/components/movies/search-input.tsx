@@ -6,15 +6,11 @@ export type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type
 
 export function SearchInput({
   id = "movie-search",
-  label = "Search movies",
   className = "",
   ...props
 }: SearchInputProps) {
   return (
     <div className="min-w-0 flex-1">
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-foreground">
-        {label}
-      </label>
       <input
         {...props}
         id={id}

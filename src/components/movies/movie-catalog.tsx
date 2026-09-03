@@ -133,7 +133,6 @@ export function MovieCatalog() {
 
   return (
     <section
-      className="mt-10"
       aria-labelledby="catalog-heading"
       aria-busy={queryResult.isFetching}
     >
@@ -229,12 +228,6 @@ function SearchControls({
           onCategoryChange={handleCategoryChange}
         />
       </div>
-      <p
-        id="search-helper-text"
-        className="mt-4 text-sm leading-6 text-muted-foreground"
-      >
-        Results update after you pause typing. Press Enter to search immediately.
-      </p>
     </div>
   );
 }

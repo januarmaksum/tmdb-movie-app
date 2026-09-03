@@ -20,7 +20,6 @@ export function CategoryFilter({
 }: CategoryFilterProps) {
   return (
     <div>
-      <span className="mb-2 block text-sm font-medium text-foreground">Category</span>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Movie categories">
         {MOVIE_CATEGORIES.map((category) => {
           const isSelected = category === selectedCategory;
