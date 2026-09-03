@@ -196,7 +196,10 @@ function SearchControls({
 
   if (syncedQuery !== initialQuery) {
     setSyncedQuery(initialQuery);
-    setSearchValue(initialQuery);
+
+    if (normalizeMovieQuery(searchValue) !== initialQuery) {
+      setSearchValue(initialQuery);
+    }
   }
 
   const clearDebounceTimer = useCallback(() => {
