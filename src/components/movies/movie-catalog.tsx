@@ -233,7 +233,7 @@ function SearchControls({
   }
 
   return (
-    <div className="mb-10 rounded-bl-lg rounded-br-lg border border-border bg-surface/60 p-4 sm:p-6">
+    <div className="sticky top-0 z-20 mb-10 rounded-bl-lg rounded-br-lg border border-border bg-surface/70 p-4 backdrop-blur-md sm:p-6">
       <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <form role="search" onSubmit={handleSearchSubmit} className="min-w-0">
           <SearchInput

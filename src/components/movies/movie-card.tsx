@@ -18,9 +18,9 @@ export function MovieCard({ movie, loading = "lazy" }: MovieCardProps) {
   return (
     <Link
       href={`/movies/${movie.id}`}
-      className="group block min-w-0 rounded-lg"
+      className="group relative z-0 block min-w-0 rounded-lg hover:z-10 focus-visible:z-10"
     >
-      <article className="min-w-0">
+      <article className="min-w-0 transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.04] motion-safe:group-focus-visible:scale-[1.04]">
         <div className="relative aspect-2/3 overflow-hidden rounded-lg border border-border bg-surface transition-colors group-hover:border-primary/70 group-active:border-primary">
           <Image
             src={movie.posterUrl}
