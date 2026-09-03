@@ -98,17 +98,17 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 
 **Dependencies:** Working Popular catalog
 
-- [ ] Add Now Playing, Popular, Top Rated, and Upcoming category controls.
-- [ ] Use only the supported `MovieCategory` values in UI state, query keys, and API validation.
-- [ ] Add a controlled title search input with a 350 ms debounce.
-- [ ] Trim search input before issuing a request; whitespace-only input restores category mode.
-- [ ] Store the current category and search query in URL search parameters using `category` and `q`.
-- [ ] Entering a non-empty search switches the catalog to search mode.
-- [ ] Selecting a category clears the current search and returns to category mode.
-- [ ] Reset pagination whenever the category or normalized search query changes.
-- [ ] Include the mode, category, and normalized query in the TanStack Query key so caches cannot mix.
-- [ ] Mark the selected category accessibly and support keyboard operation.
-- [ ] Show distinct pending, no-results, failed, and retrying states without clearing valid prior content unnecessarily.
+- [x] Add Now Playing, Popular, Top Rated, and Upcoming category controls.
+- [x] Use only the supported `MovieCategory` values in UI state, query keys, and API validation.
+- [x] Add a controlled title search input with a 350 ms debounce.
+- [x] Trim search input before issuing a request; whitespace-only input restores category mode.
+- [x] Store the current category and search query in URL search parameters using `category` and `q`.
+- [x] Entering a non-empty search switches the catalog to search mode.
+- [x] Selecting a category clears the current search and returns to category mode.
+- [x] Reset pagination whenever the category or normalized search query changes.
+- [x] Include the mode, category, and normalized query in the TanStack Query key so caches cannot mix.
+- [x] Mark the selected category accessibly and support keyboard operation.
+- [x] Show distinct pending, no-results, failed, and retrying states without clearing valid prior content unnecessarily.
 
 **Definition of done**
 

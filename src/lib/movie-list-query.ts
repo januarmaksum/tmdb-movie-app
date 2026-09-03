@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { movieKeys } from "@/lib/movie-query-keys";
 import type { ApiError, MovieCategory, MoviePage } from "@/types/movie";
 
@@ -8,13 +8,10 @@ export type MovieListQueryInput = {
   query: string;
 };
 
-export const popularMovieListRequest = {
-  category: "popular",
-  page: 1,
-  query: "",
-} as const satisfies MovieListQueryInput;
-
-async function fetchMovieList(input: MovieListQueryInput): Promise<MoviePage> {
+async function fetchMovieList(
+  input: MovieListQueryInput,
+  signal: AbortSignal,
+): Promise<MoviePage> {
   const searchParams = new URLSearchParams({
     category: input.category,
     page: String(input.page),
@@ -24,7 +21,9 @@ async function fetchMovieList(input: MovieListQueryInput): Promise<MoviePage> {
     searchParams.set("query", input.query);
   }
 
-  const response = await fetch(`/api/movies?${searchParams.toString()}`);
+  const response = await fetch(`/api/movies?${searchParams.toString()}`, {
+    signal,
+  });
 
   if (!response.ok) {
     const payload = (await response.json().catch(() => null)) as ApiError | null;
@@ -39,7 +38,8 @@ async function fetchMovieList(input: MovieListQueryInput): Promise<MoviePage> {
 export function movieListQueryOptions(input: MovieListQueryInput) {
   return queryOptions({
     queryKey: movieKeys.list(input),
-    queryFn: () => fetchMovieList(input),
+    queryFn: ({ signal }) => fetchMovieList(input, signal),
+    placeholderData: keepPreviousData,
     retry: false,
   });
 }

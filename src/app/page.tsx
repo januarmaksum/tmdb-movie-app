@@ -3,22 +3,26 @@ import {
   dehydrate,
   HydrationBoundary,
 } from "@tanstack/react-query";
-import { connection } from "next/server";
 import { Suspense } from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { SiteHeader } from "@/components/layout/site-header";
 import {
-  PopularCatalogLoading,
-  PopularMovieCatalog,
-} from "@/components/movies/popular-movie-catalog";
-import {
-  movieListQueryOptions,
-  popularMovieListRequest,
-} from "@/lib/movie-list-query";
+  MovieCatalog,
+  MovieCatalogLoading,
+} from "@/components/movies/movie-catalog";
+import { parseMovieCatalogSearchParams } from "@/lib/movie-catalog-state";
+import { movieListQueryOptions } from "@/lib/movie-list-query";
 import { getQueryClient } from "@/lib/query-client";
 import { getMovies } from "@/lib/tmdb-movies.server";
 
-export default function Home() {
+type HomeProps = {
+  searchParams: Promise<{
+    category?: string | string[];
+    q?: string | string[];
+  }>;
+};
+
+export default function Home({ searchParams }: HomeProps) {
   return (
     <div className="flex min-h-dvh flex-1 flex-col bg-background">
       <SiteHeader />
@@ -37,8 +41,8 @@ export default function Home() {
             </p>
           </header>
 
-          <Suspense fallback={<PopularCatalogLoading />}>
-            <PopularCatalogData />
+          <Suspense fallback={<MovieCatalogLoading />}>
+            <MovieCatalogData searchParams={searchParams} />
           </Suspense>
         </PageContainer>
       </main>
@@ -46,14 +50,17 @@ export default function Home() {
   );
 }
 
-async function PopularCatalogData() {
-  await connection();
-
+async function MovieCatalogData({ searchParams }: HomeProps) {
+  const catalogState = parseMovieCatalogSearchParams(await searchParams);
+  const movieListRequest = {
+    ...catalogState,
+    page: 1,
+  };
   const queryClient = getQueryClient();
 
   void queryClient.prefetchQuery({
-    ...movieListQueryOptions(popularMovieListRequest),
-    queryFn: () => getMovies(popularMovieListRequest),
+    ...movieListQueryOptions(movieListRequest),
+    queryFn: () => getMovies(movieListRequest),
   });
 
   return (
@@ -63,7 +70,7 @@ async function PopularCatalogData() {
           defaultShouldDehydrateQuery(query) || query.state.status === "pending",
       })}
     >
-      <PopularMovieCatalog />
+      <MovieCatalog />
     </HydrationBoundary>
   );
 }

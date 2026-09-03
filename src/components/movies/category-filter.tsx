@@ -8,7 +8,7 @@ const categoryLabels: Record<MovieCategory, string> = {
 };
 
 export type CategoryFilterProps = {
-  selectedCategory: MovieCategory;
+  selectedCategory: MovieCategory | null;
   onCategoryChange?: (category: MovieCategory) => void;
   disabled?: boolean;
 };
