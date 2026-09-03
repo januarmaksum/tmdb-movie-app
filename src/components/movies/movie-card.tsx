@@ -18,7 +18,6 @@ export function MovieCard({ movie, loading = "lazy" }: MovieCardProps) {
   return (
     <Link
       href={`/movies/${movie.id}`}
-      prefetch={false}
       className="group block min-w-0 rounded-lg"
     >
       <article className="min-w-0">

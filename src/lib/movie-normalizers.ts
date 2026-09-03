@@ -127,8 +127,7 @@ function normalizeCast(credits: TmdbCredits | null | undefined) {
     .filter(
       (member) =>
         Number.isSafeInteger(member.id) &&
-        member.id > 0 &&
-        normalizeText(member.name),
+        member.id > 0,
     )
     .sort((left, right) => (left.order ?? Infinity) - (right.order ?? Infinity))
     .slice(0, MAIN_CAST_LIMIT)

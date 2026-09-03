@@ -4,12 +4,22 @@ export type EmptyStateProps = {
   title: string;
   description: string;
   action?: ReactNode;
+  headingLevel?: "h1" | "h2";
 };
 
-export function EmptyState({ title, description, action }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  action,
+  headingLevel = "h2",
+}: EmptyStateProps) {
+  const Heading = headingLevel;
+
   return (
     <section className="rounded-lg border border-border bg-surface px-5 py-12 text-center sm:px-8">
-      <h2 className="text-xl font-semibold tracking-[-0.02em] text-foreground">{title}</h2>
+      <Heading className="text-xl font-semibold tracking-[-0.02em] text-foreground">
+        {title}
+      </Heading>
       <p className="mx-auto mt-2 max-w-md text-base leading-7 text-muted-foreground">
         {description}
       </p>
@@ -22,9 +32,17 @@ export type ErrorStateProps = {
   title: string;
   description: string;
   action?: ReactNode;
+  headingLevel?: "h1" | "h2";
 };
 
-export function ErrorState({ title, description, action }: ErrorStateProps) {
+export function ErrorState({
+  title,
+  description,
+  action,
+  headingLevel = "h2",
+}: ErrorStateProps) {
+  const Heading = headingLevel;
+
   return (
     <section
       role="alert"
@@ -33,9 +51,9 @@ export function ErrorState({ title, description, action }: ErrorStateProps) {
       <p className="text-sm font-semibold tracking-[0.14em] text-destructive uppercase">
         Something went wrong
       </p>
-      <h2 className="mt-3 text-xl font-semibold tracking-[-0.02em] text-foreground">
+      <Heading className="mt-3 text-xl font-semibold tracking-[-0.02em] text-foreground">
         {title}
-      </h2>
+      </Heading>
       <p className="mx-auto mt-2 max-w-md text-base leading-7 text-muted-foreground">
         {description}
       </p>

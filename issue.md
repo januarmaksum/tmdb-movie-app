@@ -146,17 +146,17 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 
 **Dependencies:** API foundation and catalog links
 
-- [ ] Add the dynamic route `/movies/[id]`.
-- [ ] Validate the route parameter as a positive numeric movie ID.
-- [ ] Prefetch the normalized detail response in the Server Component and hydrate it into TanStack Query.
-- [ ] Fetch TMDB movie details with `credits` appended or combine the official details and credits endpoints server-side.
-- [ ] Identify the director from the credits crew entry whose job is `Director`.
-- [ ] Preserve TMDB cast order and limit the main cast to a clear, documented count such as the first 10 members.
-- [ ] Display the poster, title, release year, synopsis, director, and main cast.
-- [ ] Provide fallbacks for missing poster, release date, synopsis, director, cast name, character, and profile image.
-- [ ] Add route-level loading, error, and not-found UI.
-- [ ] Add a clear link back to the catalog without relying exclusively on browser history.
-- [ ] Set useful page metadata from the movie title when detail data is available.
+- [x] Add the dynamic route `/movies/[id]`.
+- [x] Validate the route parameter as a positive numeric movie ID.
+- [x] Prefetch the normalized detail response in the Server Component and hydrate it into TanStack Query.
+- [x] Fetch TMDB movie details with `credits` appended or combine the official details and credits endpoints server-side.
+- [x] Identify the director from the credits crew entry whose job is `Director`.
+- [x] Preserve TMDB cast order and limit the main cast to a clear, documented count such as the first 10 members.
+- [x] Display the poster, title, release year, synopsis, director, and main cast.
+- [x] Provide fallbacks for missing poster, release date, synopsis, director, cast name, character, and profile image.
+- [x] Add route-level loading, error, and not-found UI.
+- [x] Add a clear link back to the catalog without relying exclusively on browser history.
+- [x] Set useful page metadata from the movie title when detail data is available.
 
 References:
 
