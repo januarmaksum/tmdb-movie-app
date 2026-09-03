@@ -175,17 +175,17 @@ References:
 
 **Dependencies:** All previous P0 feature phases
 
-- [ ] Replace the `create-next-app` metadata, title, description, favicon references where applicable, and starter content.
-- [ ] Rewrite `README.md` with the project overview, feature list, stack, local setup, environment variables, architecture decisions, scripts, and deployment URL.
-- [ ] Explain the server proxy, normalization boundary, TanStack hydration, query-key strategy, and Load More decision.
-- [ ] Confirm `.env.local` and every credential-bearing file remain ignored.
-- [ ] Run `npm run lint` and fix all actionable findings.
-- [ ] Run `npm run build` with the required environment variable and fix all production failures.
-- [ ] Deploy to Vercel and configure `TMDB_API_TOKEN` in the deployment environment.
-- [ ] Smoke-test the production URL rather than relying only on local behavior.
-- [ ] Verify that direct navigation and refresh work for the catalog query URL and `/movies/{id}`.
-- [ ] Confirm the public GitHub repository contains no secret or generated build output.
-- [ ] Review Git history for atomic, clear, descriptive commits.
+- [x] Replace the `create-next-app` metadata, title, description, favicon references where applicable, and starter content.
+- [x] Rewrite `README.md` with the project overview, feature list, stack, local setup, environment variables, architecture decisions, scripts, and deployment URL.
+- [x] Explain the server proxy, normalization boundary, TanStack hydration, query-key strategy, and Load More decision.
+- [x] Confirm `.env.local` and every credential-bearing file remain ignored.
+- [x] Run `npm run lint` and fix all actionable findings.
+- [x] Run `npm run build` with the required environment variable and fix all production failures.
+- [x] Deploy to Vercel and configure `TMDB_API_TOKEN` in the deployment environment.
+- [x] Smoke-test the production URL rather than relying only on local behavior.
+- [x] Verify that direct navigation and refresh work for the catalog query URL and `/movies/{id}`.
+- [x] Confirm the public GitHub repository contains no secret or generated build output.
+- [x] Review Git history for atomic, clear, descriptive commits.
 
 **Definition of done**
 
