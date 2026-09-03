@@ -57,12 +57,12 @@ This sequence exposes API, authentication, data-shape, and rendering risks early
 
 **Dependencies:** Project and API foundation
 
-- [ ] Replace the starter theme with a small set of reusable color, typography, spacing, radius, and focus tokens.
-- [ ] Create the shared page container and header.
-- [ ] Create reusable Search Input, Category Filter, Movie Card, Movie Grid, Skeleton Card, Empty State, and Error State components.
-- [ ] Give interactive elements visible hover, active, disabled, and keyboard-focus states.
-- [ ] Establish the responsive grid at mobile, tablet, and desktop widths.
-- [ ] Keep this phase intentionally thin; do not finish the detail page or decorative polish yet.
+- [x] Replace the starter theme with a small set of reusable color, typography, spacing, radius, and focus tokens.
+- [x] Create the shared page container and header.
+- [x] Create reusable Search Input, Category Filter, Movie Card, Movie Grid, Skeleton Card, Empty State, and Error State components.
+- [x] Give interactive elements visible hover, active, disabled, and keyboard-focus states.
+- [x] Establish the responsive grid at mobile, tablet, and desktop widths.
+- [x] Keep this phase intentionally thin; do not finish the detail page or decorative polish yet.
 
 **Definition of done**
 
